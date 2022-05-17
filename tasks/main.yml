@@ -21,17 +21,19 @@
     name: haproxy_connect_any
     persistent: yes
     state: "{{ haproxy_connect_all_ports }}"
+  notify: restart haproxy
     
-#- name: Ensure HAProxy is configured correctly.
-#  ansible.builtin.template:
-#    src: haproxy.cfg.j2
-#    dest: /etc/haproxy/haproxy.cfg
-#  notify: restart haproxy
+- name: Ensure HAProxy is configured correctly.
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+  notify: restart haproxy
 
-#- name: Enable port {{ rh_demo_web_app_listen_port }} in firewalld
-#  ansible.builtin.firewalld:
-#    port: "{{ haproxy_frontend_port }}/tcp"
-#    permanent: yes
-#    immediate: true
-#    state: enabled
-#  when: "'firewalld.service' in services"
+- name: Make sure required firewalld rules are in place
+  ansible.builtin.firewalld:
+    port: "{{ haproxy_frontend_port }}/tcp"
+    state: enabled
+    permanent: true
+    immediate: true
+  when: ansible_facts.services["firewalld.service"] is defined
