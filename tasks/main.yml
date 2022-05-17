@@ -16,12 +16,11 @@
     state: started
     enabled: true
 
-- name: "Ensure port {{ haproxy_backend_ports }} has correct SELinux label."
-  ansible.builtin.seport:
-    ports: "{{ haproxy_backend_ports }}"
-    proto: tcp
-    setype: haproxy_t
-    state: present
+- name: "SELinux - Ensure haproxy can connect to all TCP ports."
+  ansible.builtin.seboolean:
+    name: haproxy_connect_any
+    persistent: yes
+    state: "{{ haproxy_connect_all_ports }}"
     
 #- name: Ensure HAProxy is configured correctly.
 #  ansible.builtin.template:
