@@ -65,18 +65,18 @@ defaults
 frontend {{ haproxy_frontend_name }}
     bind {{ haproxy_frontend_bind_address }}:{{ haproxy_frontend_port }}
     mode {{ haproxy_frontend_mode }}
-    acl url_static       path_beg       -i /static /images /javascript /stylesheets
-    acl url_static       path_end       -i .jpg .gif .png .css .js
+    #acl url_static       path_beg       -i /static /images /javascript /stylesheets
+    #acl url_static       path_end       -i .jpg .gif .png .css .js
 
-    use_backend static          if url_static
+    #use_backend static          if url_static
     default_backend             {{ haproxy_backend_name }}
 
 #---------------------------------------------------------------------
 # static backend for serving up images, stylesheets and such
 #---------------------------------------------------------------------
-backend static
-    balance     roundrobin
-    server      static 127.0.0.1:4331 check
+#backend static
+    #balance     roundrobin
+    #server      static 127.0.0.1:4331 check
 
 #---------------------------------------------------------------------
 # {{ haproxy_backend_balance_method }} balancing between the various backends
