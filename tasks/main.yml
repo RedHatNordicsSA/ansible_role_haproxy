@@ -1,0 +1,38 @@
+---
+# tasks file for ansible_haproxy
+- name: Get service facts.
+  ansible.builtin.service_facts:
+
+- name: Ensure HAProxy and other required packages are installed.
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - haproxy
+    - socat
+
+- name: Ensure the HAProxy service is enabled and started.
+  ansible.builtin.service:
+    name: haproxy
+    state: started
+    enabled: true
+
+- name: "Ensure port {{ haproxy_backend_ports }} has correct SELinux label."
+  ansible.builtin.seport:
+    ports: "{{ haproxy_backend_ports }}"
+    proto: tcp
+    setype: haproxy_t
+    state: present
+    
+#- name: Ensure HAProxy is configured correctly.
+#  ansible.builtin.template:
+#    src: haproxy.cfg.j2
+#    dest: /etc/haproxy/haproxy.cfg
+#  notify: restart haproxy
+
+#- name: Enable port {{ rh_demo_web_app_listen_port }} in firewalld
+#  ansible.builtin.firewalld:
+#    port: "{{ haproxy_frontend_port }}/tcp"
+#    permanent: yes
+#    immediate: true
+#    state: enabled
+#  when: "'firewalld.service' in services"
