@@ -31,7 +31,7 @@ global
     daemon
 
     # turn on stats unix socket
-    stats socket /var/lib/haproxy/stats
+    stats socket /var/lib/haproxy/stats level admin
 
     # utilize system-wide crypto-policies
     ssl-default-bind-ciphers PROFILE=SYSTEM
